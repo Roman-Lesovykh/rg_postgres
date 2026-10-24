@@ -1,0 +1,74 @@
+services:
+
+  # Сервис rg_postgres
+  postgres:
+    image: postgres:17-alpine
+    #image: postgres:${DOCKER_IMAGE_NAME}
+    container_name: "${DOCKER_CONTAINER_NAME}"
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      #POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      #POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      PGDATA: ${POSTGRES_PGDATA}
+    secrets:
+      - postgres_password
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_data:/${POSTGRES_DATA}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - postgres_net
+
+  # Сервис rg_app_init
+  rg_app_init:
+    image: python:3.15-slim
+    #image: "${APP_IMAGE_NAME}"
+    container_name: "${APP_CONTAINER_NAME}"
+    restart: "no" # Сервис должен завершиться и не перезапускаться
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      TZ: Europe/Moscow # <--- ДОБАВЛЕНО: Устанавливаем часовой пояс для Python-скрипта
+      #POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    secrets:
+      - postgres_password
+    volumes:
+      - ./rg_app_init:/app
+      #- ./rg_app_init/log:/app/log        # <-- хостовая папка rg_app_init/log
+      #- ./log/rg_app_init:/app/log/rg_app_init # Монтируем папку логов проекта, чтобы файлы сохранялись на хосте
+      #- ./log/rg_app_init:/app/log/rg_app_init # Монтируем папку логов проекта, чтобы файлы сохранялись на хосте
+      #- ./log/rg_app_init:/app/log/rg_app_init_log # Монтируем папку логов проекта, чтобы файлы сохранялись на хосте
+      - /etc/localtime:/etc/localtime:ro # Синхронизация времени с хостом
+    working_dir: /app
+    command: >
+      sh -c "pip install --no-cache-dir --root-user-action=ignore -r requirements.txt &&
+             python -u init_script.py"
+    networks:
+      - postgres_net
+
+
+secrets:
+  postgres_password:
+    file: ./secrets/postgres_password.txt
+
+volumes:
+  postgres_data:
+    driver: local
+    name: "${DOCKER_VOLUME_NAME}"
+
+networks:
+  postgres_net:
+    driver: bridge

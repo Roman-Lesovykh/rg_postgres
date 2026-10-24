@@ -11,8 +11,14 @@ wheels/
 venv/
 
 # Файлы с секретами
+.env*
 .env
-.env.*
+env/
+!.env.example
 
-#VS Code
+# VS Code
 .vscode
+
+# Логи
+logs/
+
