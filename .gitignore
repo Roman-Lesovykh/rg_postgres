@@ -6,6 +6,13 @@ dist/
 wheels/
 *.egg-info
 
-# Virtual environments
+# Виртуальные окружения
 .venv
+venv/
+
+# Файлы с секретами
 .env
+.env.*
+
+#VS Code
+.vscode
