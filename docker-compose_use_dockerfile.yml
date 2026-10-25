@@ -1,0 +1,37 @@
+services:
+
+  # Сервис rg_postgres
+  postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: "${DOCKER_IMAGE_NAME}"
+    container_name: "${DOCKER_CONTAINER_NAME}"
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA: ${POSTGRES_PGDATA}
+    secrets:
+      - postgres_password
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_data:/${POSTGRES_DATA}
+    networks:
+      - postgres_net
+
+secrets:
+  postgres_password:
+
+    file: ./src/rg_postgres/.env.postgres_password
+
+volumes:
+  postgres_data:
+    driver: local
+    name: "${DOCKER_VOLUME_NAME}"
+
+networks:
+  postgres_net:
+    driver: bridge

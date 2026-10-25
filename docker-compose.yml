@@ -2,17 +2,13 @@ services:
 
   # Сервис rg_postgres
   postgres:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: "${DOCKER_IMAGE_NAME}"
+    image: "${DOCKER_IMAGE_NAME_POSTGRES}"
+    #DOCKER_IMAGE_NAME_POSTGRES="postgres:17" # Название образа в Docker
     container_name: "${DOCKER_CONTAINER_NAME}"
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
-      #POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
-      POSTGRES_DB: ${POSTGRES_DB}
       PGDATA: ${POSTGRES_PGDATA}
     secrets:
       - postgres_password
@@ -20,40 +16,19 @@ services:
       - "127.0.0.1:${POSTGRES_PORT}:5432"
     volumes:
       - postgres_data:/${POSTGRES_DATA}
-      - ./init_sql:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     networks:
       - postgres_net
 
-  # Сервис rg_app_init
-  rg_app_init:
-    build:
-      context: ./rg_app_init
-      dockerfile: Dockerfile
-    image: "${APP_IMAGE_NAME}"
-    container_name: "${APP_CONTAINER_NAME}"
-    depends_on:
-      postgres:
-        condition: service_healthy
-    environment:
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_DB: ${POSTGRES_DB}
-      TZ: Europe/Moscow # <--- ДОБАВЛЕНО: Устанавливаем часовой пояс для Python-скрипта
-    secrets:
-      - postgres_password
-    volumes:
-      - ./rg_app_init:/app
-      #- ./log/rg__app_init:/app/log/rg__app_init # Монтируем папку логов проекта, чтобы файлы сохранялись на хосте
-      - /etc/localtime:/etc/localtime:ro # Синхронизация времени с хостом
-    networks:
-      - postgres_net
-    # Сервис должен завершиться и не перезапускаться
-    restart: "no"
 
 secrets:
   postgres_password:
-    file: ./secrets/postgres_password.txt
+    file: ./src/rg_postgres/.env.postgres_password
 
 volumes:
   postgres_data:

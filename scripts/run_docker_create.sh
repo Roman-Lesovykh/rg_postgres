@@ -73,15 +73,6 @@ if [ ! -f "$LOG_PATH" ]; then
 fi
 
 
-# Установка директории приложения
-# echo $SEPARATOR
-# echo "$(get_timestamp)Set path..."
-# cd "${SCRIPT_APP_DIR}"
-# echo "$(get_timestamp)Run: cd $SCRIPT_APP_DIR"
-# echo "$(get_timestamp)Set path...Ok"
-
-
-
 # Загружаем переменные из файла .env
 # Проверяем, существует ли файл .env именно рядом со скриптом
 echo $SEPARATOR
@@ -118,7 +109,7 @@ echo $SEPARATOR
 echo $SEPARATOR
 echo $SEPARATOR
 echo $SEPARATOR
-. "$SCRIPT_DIR"/docker_check_after_create.sh
+. "$SCRIPT_DIR"/docker_check.sh
 
 
 echo $SEPARATOR
