@@ -4,7 +4,6 @@ echo $SEPARATOR
 echo "$(get_timestamp)Script start - $(realpath "${BASH_SOURCE[0]}")"
 
 
-
 # Сервис rg_postgres - Сначала останавливаем container, затем его удаляем
 echo $SEPARATOR
 echo "$(get_timestamp)Find, stop and delete container ${DOCKER_CONTAINER_NAME}..."
@@ -37,9 +36,6 @@ fi
 echo "$(get_timestamp)Find, stop and delete container ${DOCKER_CONTAINER_NAME}...Ok"
 
 
-
-
-
 # Сервис rg_postgres - Удаляем Image
 echo $SEPARATOR
 echo "$(get_timestamp)Find and delete image ${DOCKER_IMAGE_NAME}..."
@@ -53,7 +49,6 @@ else
     echo "$(get_timestamp)Image ${DOCKER_IMAGE_NAME} not found"
 fi
 echo "$(get_timestamp)Find and delete image ${DOCKER_IMAGE_NAME}...Ok"
-
 
 
 echo $SEPARATOR
@@ -70,10 +65,6 @@ fi
 echo "$(get_timestamp)Find and delete image ${DOCKER_IMAGE_NAME_POSTGRES}...Ok"
 
 
-
-
-
-
 # Сервис rg_postgres - Удаляем Volume
 echo $SEPARATOR
 echo "$(get_timestamp)Find and delete volume ${DOCKER_VOLUME_NAME}..."
@@ -86,8 +77,6 @@ else
     echo "$(get_timestamp)Volume ${DOCKER_VOLUME_NAME} not found"
 fi
 echo "$(get_timestamp)Find and delete volume ${DOCKER_VOLUME_NAME}...Ok"
-
-
 
 
 if [ "$DOCKER_CLEAR_CACHE_AFTER_DELETE_CONTAINER" = "1" ]; then
@@ -106,9 +95,9 @@ echo "$(get_timestamp)Run: docker system df (Show memory):"
 docker system df
 
 
-
 echo $SEPARATOR
 echo "$(get_timestamp)Script end - $(realpath "${BASH_SOURCE[0]}")"
+
 
 
 

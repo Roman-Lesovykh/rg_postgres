@@ -1,7 +1,5 @@
 #!/bin/bash
 
-clear
-
 SEPARATOR="----------------------------------------------------------"
 
 # --- Кэш для TIMESTAMP -------------------------------------------------------
@@ -75,15 +73,6 @@ if [ ! -f "$LOG_PATH" ]; then
 fi
 
 
-# Установка директории приложения
-# echo $SEPARATOR
-# echo "$(get_timestamp)Set path..."
-# cd "${SCRIPT_APP_DIR}"
-# echo "$(get_timestamp)Run: cd $SCRIPT_APP_DIR"
-# echo "$(get_timestamp)Set path...Ok"
-
-
-
 # Загружаем переменные из файла .env
 # Проверяем, существует ли файл .env именно рядом со скриптом
 echo $SEPARATOR
@@ -110,16 +99,8 @@ fi
 . "$SCRIPT_DIR"/print_env.sh
 . "$SCRIPT_DIR"/docker_delete.sh
 
+
 echo $SEPARATOR
 echo "$(get_timestamp)Script end - $SCRIPT_PATH"
 echo $SEPARATOR
-
-
-#Устанавливаем права на файлы. Если файлы были новые, то они могут не иметь нужных прав
-#echo "---------------------------"
-#echo "INFO: chmod -R u+rwx ${SCRIPT_DIR}"
-#chmod -R u+rwx "${SCRIPT_DIR}"
-#chmod -R u+rwx /Users/roman/Dev/Python/rg_postgres/
-#chmod 600 /Users/roman/Dev/Python/rg_postgres/src/rg_postgres/.env.postgres_password
-
 

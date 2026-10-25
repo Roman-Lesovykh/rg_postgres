@@ -67,3 +67,11 @@ echo "$(ls -la ${SCRIPT_DIR})"
 echo $SEPARATOR
 echo "$(get_timestamp)Run: docker system df (Show memory):"
 docker system df
+
+
+#Устанавливаем права на файлы. Если файлы были новые, то они могут не иметь нужных прав
+#echo "---------------------------"
+#echo "INFO: chmod -R u+rwx ${SCRIPT_DIR}"
+#chmod -R u+rwx "${SCRIPT_DIR}"
+#chmod -R u+rwx /Users/roman/Dev/Python/rg_postgres/
+#chmod 600 /Users/roman/Dev/Python/rg_postgres/src/rg_postgres/.env.postgres_password
