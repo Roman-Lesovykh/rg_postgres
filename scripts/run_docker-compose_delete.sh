@@ -25,6 +25,9 @@ cd "${SCRIPT_DIR}"
 exec > >(tee -a "$SCRIPT_DIR/log/$LOG_FILE") 2>&1
 
 
+
+
+
 #Устанавливаем права на файлы. Если файлы были новые, то они могут не иметь нужных прав
 #echo "---------------------------"
 #echo "INFO: chmod -R u+rwx ${SCRIPT_DIR}"

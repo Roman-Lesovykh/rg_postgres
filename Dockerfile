@@ -1,16 +1,13 @@
 # Используем официальный образ последней версии PostgreSQL
-FROM postgres:17-alpine
-#FROM postgres:17
+#FROM postgres:17-alpine
+FROM postgres:17
 
 # Метаданные
 LABEL maintainer="roma.lesovykh@yandex.ru"
-LABEL description="Custom PostgreSQL 17 image"
+LABEL description="Custom PostgreSQL image"
 
-# Значения по умолчанию — используются только если переменная не передана при запуске.
-# Реальные значения подставляет скрипт через `docker run -e ...`
+# Значения по умолчанию
 ENV POSTGRES_USER=rg_view_4m40 \
-    #POSTGRES_PASSWORD=strong_password_here \
-    #POSTGRES_DB=rg_db \
     PGDATA=/var/lib/postgresql/data/pgdata
 
 # Открываем стандартный порт PostgreSQL

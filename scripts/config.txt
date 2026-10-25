@@ -1,0 +1,2 @@
+VAR1="/Users/roman/Dev/Python/logs/rg_postgres"
+VAR2="world"
